@@ -16,7 +16,9 @@ This fork was created as the original repo has been dead for the past year and s
 $ ansible-playbook site.yml -i inventory/multipass/inventory.yml
 ```
 
-Your inventory must include at least one `initial_controller` and one `worker` node. To get a highly available control plane more `controller` nodes can be added. The first initial controller creates tokens that get written to the nodes when the playbook is executed.
+If doing a multi-node cluster, your inventory must include at least one `initial_controller` and one `worker` node. To get a highly available control plane more `controller` nodes can be added. The first initial controller creates tokens that get written to the nodes when the playbook is executed.
+
+If doing a single-node cluster, your inventory must include only one `initial_controller` and the variable `k0s_single_node` be set to `true`.
 
 `reset.yml`:
 
@@ -30,7 +32,7 @@ Deletes k0s all its files, directories and services from all hosts.
 
 You can find a user guide on how to use this playbook in the [k0s documentation](https://docs.k0sproject.io/main/examples/ansible-playbook/).
 
-## Example with multipass
+## Example with multipass for multi-node clusters
 
 For the quick creation of virtual machines, I have added a script that provisions a bunch of nodes via [multipass](https://github.com/canonical/multipass) and another small Python script that generates an Ansible inventory from the created instances.
 
@@ -144,7 +146,13 @@ run. 5 VMs are created by default, pass number as argument if needed.
 $ tools/vl_create_instances_inventory.py
 ```
 
-This command will create VMs and generate inventory file in `tools` directory. 
+This command will create VMs and generate inventory file in `tools` directory.
+
+## Example for Single-node cluster
+
+The file [inventory/sample/inventory-singlenode.yml] contains the most basic inventory file required to deploy a single-node cluster.
+
+Copy the file as your inventory file and edit it to your needs. Then run `ansible-playbook site.yml -i myinventory.yaml` 
 
 ### How to cleanup the cluster
 
